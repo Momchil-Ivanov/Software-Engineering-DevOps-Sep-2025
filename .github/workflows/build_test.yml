@@ -2,9 +2,9 @@ name: Build and Test
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "10-01-02-Student-Registry-App" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "10-01-02-Student-Registry-App" ]
 
 jobs:
   build_test:
