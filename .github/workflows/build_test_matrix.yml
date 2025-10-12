@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build and Test Matrix
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build_test:
+  build_test_matrix:
 
     runs-on: ubuntu-latest
 
