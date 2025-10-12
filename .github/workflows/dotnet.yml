@@ -2,9 +2,9 @@ name: Build and test
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "10-04-HouseRentingSystem-App" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "10-04-HouseRentingSystem-App" ]
 
 jobs:
   build:
