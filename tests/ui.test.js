@@ -21,6 +21,9 @@ test('Verify "Login" button is visible', async ({ page }) => {
 test('Verify "All Books" link is visible after user login', async ({ page }) => {
   await page.goto('/login');
 
+  // Wait for the login form to be rendered
+  await page.waitForSelector('#login-form');
+
   await page.fill('input[name="email"]', 'peter@abv.bg');
   await page.fill('input[name="password"]', '123456');
   await page.click('input[type="submit"]');
@@ -31,6 +34,9 @@ test('Verify "All Books" link is visible after user login', async ({ page }) => 
 
 test('Login with valid credentials', async ({ page }) => {
   await page.goto('/login');
+
+  // Wait for the login form to be rendered
+  await page.waitForSelector('#login-form');
 
   await page.fill('input[name="email"]', 'peter@abv.bg');
   await page.fill('input[name="password"]', '123456');
@@ -43,6 +49,9 @@ test('Login with valid credentials', async ({ page }) => {
 
 test('Login with empty input fields', async ({ page }) => {
   await page.goto('/login');
+  
+  // Wait for the login form to be rendered
+  await page.waitForSelector('#login-form');
   
   page.on('dialog', async dialog => {
     expect(dialog.type()).toContain('alert');   
@@ -59,6 +68,9 @@ test('Login with empty input fields', async ({ page }) => {
 
 test('Add book with correct data', async ({ page }) => {
   await page.goto('/login');
+
+  // Wait for the login form to be rendered
+  await page.waitForSelector('#login-form');
 
   await page.fill('input[name="email"]', 'peter@abv.bg');
   await page.fill('input[name="password"]', '123456');
@@ -85,6 +97,9 @@ test('Add book with correct data', async ({ page }) => {
 
 test('Add book with empty title field', async ({ page }) => {
   await page.goto('/login');
+
+  // Wait for the login form to be rendered
+  await page.waitForSelector('#login-form');
 
   await page.fill('input[name="email"]', 'peter@abv.bg');
   await page.fill('input[name="password"]', '123456');
@@ -118,6 +133,9 @@ test('Add book with empty title field', async ({ page }) => {
 test('Login and verify all books are displayed', async ({ page }) => {
   await page.goto('/login');
 
+  // Wait for the login form to be rendered
+  await page.waitForSelector('#login-form');
+
   await page.fill('input[name="email"]', 'peter@abv.bg');
   await page.fill('input[name="password"]', '123456');
 
@@ -134,6 +152,9 @@ test('Login and verify all books are displayed', async ({ page }) => {
 
 test('Login and navigate to Details page', async ({ page }) => {
   await page.goto('/login');
+
+  // Wait for the login form to be rendered
+  await page.waitForSelector('#login-form');
 
   await page.fill('input[name="email"]', 'peter@abv.bg');
   await page.fill('input[name="password"]', '123456');
@@ -158,6 +179,9 @@ test('Login and navigate to Details page', async ({ page }) => {
 test('Verify visibility of Logout button after user login', async ({ page }) => {
   await page.goto('/login');
 
+  // Wait for the login form to be rendered
+  await page.waitForSelector('#login-form');
+
   await page.fill('input[name="email"]', 'peter@abv.bg');
   await page.fill('input[name="password"]', '123456');
   await page.click('input[type="submit"]');
@@ -168,6 +192,9 @@ test('Verify visibility of Logout button after user login', async ({ page }) => 
 
 test('Verify redirection of Logout link after user login', async ({ page }) => {
   await page.goto('/login');
+
+  // Wait for the login form to be rendered
+  await page.waitForSelector('#login-form');
 
   await page.fill('input[name="email"]', 'peter@abv.bg');
   await page.fill('input[name="password"]', '123456');
