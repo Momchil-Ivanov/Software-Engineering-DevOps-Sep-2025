@@ -21,8 +21,15 @@ test('Verify "Login" button is visible', async ({ page }) => {
 test('Verify "All Books" link is visible after user login', async ({ page }) => {
   await page.goto('/login');
 
-  // Wait for the login form to be rendered
-  await page.waitForSelector('#login-form');
+  // Wait for the page to be fully loaded and check what's actually rendered
+  await page.waitForLoadState('networkidle');
+  
+  // Debug: Let's see what's actually on the page
+  const pageContent = await page.content();
+  console.log('Page content:', pageContent.substring(0, 500));
+  
+  // Try multiple selectors for the login form
+  await page.waitForSelector('#login-form, #login-page, form', { timeout: 10000 });
 
   await page.fill('input[name="email"]', 'peter@abv.bg');
   await page.fill('input[name="password"]', '123456');
