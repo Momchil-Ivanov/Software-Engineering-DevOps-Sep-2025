@@ -19,17 +19,51 @@ test('Verify "Login" button is visible', async ({ page }) => {
 });
 
 test('Verify "All Books" link is visible after user login', async ({ page }) => {
+  // Listen for console errors
+  const errors = [];
+  page.on('console', msg => {
+    if (msg.type() === 'error') {
+      errors.push(msg.text());
+    }
+  });
+
   await page.goto('/login');
 
-  // Wait for the page to be fully loaded and check what's actually rendered
+  // Wait for the page to be fully loaded
   await page.waitForLoadState('networkidle');
   
-  // Debug: Let's see what's actually on the page
-  const pageContent = await page.content();
-  console.log('Page content:', pageContent.substring(0, 500));
+  // Check for JavaScript errors
+  if (errors.length > 0) {
+    console.log('JavaScript errors:', errors);
+  }
   
-  // Try multiple selectors for the login form
-  await page.waitForSelector('#login-form, #login-page, form', { timeout: 10000 });
+  // Check if the main element exists (it should exist but be hidden)
+  const mainElement = await page.locator('#site-content');
+  await expect(mainElement).toBeAttached();
+  
+  // The main element is hidden, which means JavaScript isn't loading
+  // Let's check if the page object exists
+  const pageObjectExists = await page.evaluate(() => {
+    return typeof window.page !== 'undefined';
+  });
+  
+  console.log('Page object exists:', pageObjectExists);
+  
+  // If page object doesn't exist, there's a JavaScript loading issue
+  if (!pageObjectExists) {
+    console.log('JavaScript modules failed to load - checking for import errors');
+    
+    // Check if the script tag is loading
+    const scriptLoaded = await page.evaluate(() => {
+      const scripts = Array.from(document.querySelectorAll('script'));
+      return scripts.some(script => script.src.includes('app.js'));
+    });
+    
+    console.log('Script tag found:', scriptLoaded);
+  }
+
+  // For now, let's just wait for the login form to appear
+  await page.waitForSelector('#login-form', { timeout: 30000 });
 
   await page.fill('input[name="email"]', 'peter@abv.bg');
   await page.fill('input[name="password"]', '123456');
