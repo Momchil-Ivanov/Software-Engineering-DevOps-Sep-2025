@@ -33,8 +33,33 @@ jobs:
     - name: Run build
       run: npm run build --if-present
 
-    - name: Install Playwright Browsers
-      uses: microsoft/playwright-github-action@v1
+    - name: Install Playwright browsers
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libnss3 \
+          libatk-bridge2.0-0 \
+          libdrm2 \
+          libxkbcommon0 \
+          libxcomposite1 \
+          libxdamage1 \
+          libxrandr2 \
+          libgbm1 \
+          libxss1 \
+          libasound2 \
+          libgtk-3-0 \
+          libx11-xcb1 \
+          libxcb-dri3-0 \
+          libxext6 \
+          libxfixes3 \
+          libxi6 \
+          libxrender1 \
+          libxtst6 \
+          libxcb1 \
+          libx11-6 \
+          libxau6 \
+          libxdmcp6 || true
+        npx playwright install chromium --with-deps
 
     - name: Start server in background
       run: |
