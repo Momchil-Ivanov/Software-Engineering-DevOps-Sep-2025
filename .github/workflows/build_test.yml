@@ -64,11 +64,16 @@ jobs:
         # Install Playwright browsers with dependency detection
         npx playwright install chromium --with-deps || npx playwright install chromium
 
-    - name: Start server in background
+    - name: Start servers in background
       run: |
+        # Start frontend server (port 3000)
+        npm start &
+        # Start backend API server (port 3030)
         npm run server &
         sleep 10
+        # Check both servers are running
         curl -f http://localhost:3000 || exit 1
+        curl -f http://localhost:3030 || exit 1
 
     - name: Run Playwright tests
       run: npm test
