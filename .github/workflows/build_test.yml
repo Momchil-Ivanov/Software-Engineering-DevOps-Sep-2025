@@ -73,7 +73,7 @@ jobs:
         sleep 10
         # Check both servers are running
         curl -f http://localhost:3000 || exit 1
-        curl -f http://localhost:3030 || exit 1
+        curl -f http://localhost:3030/data || exit 1
 
     - name: Run Playwright tests
       run: npm test
