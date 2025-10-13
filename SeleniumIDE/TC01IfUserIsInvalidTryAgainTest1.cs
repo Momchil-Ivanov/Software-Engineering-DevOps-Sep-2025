@@ -27,11 +27,12 @@ public class TC01IfUserIsInvalidTryAgainTest
         // Use WebDriverManager to automatically download the correct ChromeDriver version
         new DriverManager().SetUpDriver(new ChromeConfig());
         
-        var chromeOptions = new ChromeOptions();
-        chromeOptions.AddArgument("--no-sandbox");
-        chromeOptions.AddArgument("--disable-dev-shm-usage");
-        chromeOptions.AddArgument("--disable-gpu");
-        chromeOptions.AddArgument("--remote-debugging-port=9222");
+        ChromeOptions options = new ChromeOptions();
+        options.AddArguments("headless");
+        options.AddArguments("no-sandbox");
+        options.AddArguments("disable-dev-shm-usage");
+        options.AddArguments("disable-gpu");
+        options.AddArguments("window-size=1920x1080");
         
         // Disable selenium-manager and use explicit path
         Environment.SetEnvironmentVariable("SELENIUM_MANAGER", "false");
@@ -41,7 +42,7 @@ public class TC01IfUserIsInvalidTryAgainTest
         var service = ChromeDriverService.CreateDefaultService(chromeDriverPath);
         service.SuppressInitialDiagnosticInformation = true;
         
-        driver = new ChromeDriver(service, chromeOptions);
+        driver = new ChromeDriver(service, options);
         js = (IJavaScriptExecutor)driver;
         vars = new Dictionary<string, object>();
     }
