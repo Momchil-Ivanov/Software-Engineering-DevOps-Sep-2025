@@ -12,8 +12,8 @@ module.exports = defineConfig({
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  /* Use multiple workers in CI for better performance */
+  workers: process.env.CI ? 4 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ['html'],
@@ -34,9 +34,9 @@ module.exports = defineConfig({
     /* Record video on failure */
     video: 'retain-on-failure',
     
-    /* Timeout settings for CI */
-    actionTimeout: process.env.CI ? 30000 : 10000,
-    navigationTimeout: process.env.CI ? 30000 : 10000,
+    /* Optimized timeout settings for CI */
+    actionTimeout: process.env.CI ? 15000 : 10000,
+    navigationTimeout: process.env.CI ? 15000 : 10000,
   },
 
   /* Configure projects for major browsers */
