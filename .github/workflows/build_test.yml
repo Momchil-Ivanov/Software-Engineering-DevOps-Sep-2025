@@ -35,6 +35,7 @@ jobs:
 
     - name: Install Playwright browsers
       run: |
+        # Install basic dependencies first
         sudo apt-get update
         sudo apt-get install -y \
           libnss3 \
@@ -46,7 +47,7 @@ jobs:
           libxrandr2 \
           libgbm1 \
           libxss1 \
-          libasound2 \
+          libasound2t64 \
           libgtk-3-0 \
           libx11-xcb1 \
           libxcb-dri3-0 \
@@ -59,7 +60,9 @@ jobs:
           libx11-6 \
           libxau6 \
           libxdmcp6 || true
-        npx playwright install chromium --with-deps
+        
+        # Install Playwright browsers with dependency detection
+        npx playwright install chromium --with-deps || npx playwright install chromium
 
     - name: Start server in background
       run: |
