@@ -2,51 +2,51 @@ name: Selenium WebDriver CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
-  test:
-    runs-on: windows-latest
+  build:
+    runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
       
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '6.0.x'
         
-    - name: Setup Chrome
-      uses: browser-actions/setup-chrome@v1
-      with:
-        chrome-version: stable
+    - name: Install Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
         
-    - name: Restore dependencies
+    - name: Install dependencies
       run: dotnet restore SeleniumBasicExercise.sln
       
-    - name: Build solution
-      run: dotnet build SeleniumBasicExercise.sln --no-restore --configuration Release
+    - name: Build
+      run: dotnet build SeleniumBasicExercise.sln --no-restore
       
-    - name: Run tests
-      run: dotnet test SeleniumBasicExercise.sln --no-build --configuration Release --verbosity normal --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
-      
-    - name: Upload test results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: test-results
-        path: |
-          **/TestResults/
-          **/coverage.cobertura.xml
-        retention-days: 30
+    - name: Run TestProject1 tests
+      env:
+        CHROMEWEBDRIVER: /usr/bin/google-chrome
+      run: |
+        echo "Running TestProject1 tests"
+        dotnet test TestProject1/TestProject1.csproj --verbosity normal
         
-    - name: Publish test results
-      uses: dorny/test-reporter@v1
-      if: success() || failure()
-      with:
-        name: Selenium Test Results
-        path: '**/test-results.trx'
-        reporter: dotnet-trx
+    - name: Run TestProject2 tests
+      env:
+        CHROMEWEBDRIVER: /usr/bin/google-chrome
+      run: |
+        echo "Running TestProject2 tests"
+        dotnet test TestProject2/TestProject2.csproj --verbosity normal
+        
+    - name: Run TestProject3 tests
+      env:
+        CHROMEWEBDRIVER: /usr/bin/google-chrome
+      run: |
+        echo "Running TestProject3 tests"
+        dotnet test TestProject3/TestProject3.csproj --verbosity normal
