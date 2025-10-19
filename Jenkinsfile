@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        dotnet 'dotnet-sdk'
+        dotnetsdk 'dotnet-sdk'
     }
     stages {
         stage("Restore project dependencies"){
