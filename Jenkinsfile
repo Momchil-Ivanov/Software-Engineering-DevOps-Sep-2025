@@ -11,60 +11,9 @@ pipeline {
                 bat 'dotnet build --no-restore'
             }
         }
-        stage("Setup ChromeDriver") {
-            steps {
-                bat '''
-                echo "Detecting Chrome browser version..."
-                powershell -Command "$chromeVersion = (Get-ItemProperty 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe' -ErrorAction SilentlyContinue).'(Default)'; if ($chromeVersion) { $version = (Get-ItemProperty $chromeVersion).VersionInfo.ProductVersion; $majorVersion = $version.Split('.')[0]; Write-Output $majorVersion } else { Write-Output 'Chrome not found in registry' }" > chrome_major_version.txt
-                
-                echo "Reading Chrome major version..."
-                for /f %%i in (chrome_major_version.txt) do set CHROME_MAJOR=%%i
-                echo Chrome major version: %CHROME_MAJOR%
-                
-                echo "Getting ChromeDriver version for Chrome %CHROME_MAJOR%..."
-                powershell -Command "try { $response = Invoke-RestMethod -Uri 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_%CHROME_MAJOR%'; Write-Output $response } catch { Write-Output 'LATEST_RELEASE' }" > chromedriver_version.txt
-                
-                for /f %%i in (chromedriver_version.txt) do set CHROMEDRIVER_VERSION=%%i
-                echo ChromeDriver version to download: %CHROMEDRIVER_VERSION%
-                
-                echo "Downloading ChromeDriver %CHROMEDRIVER_VERSION%..."
-                powershell -Command "try { Invoke-WebRequest -Uri 'https://chromedriver.storage.googleapis.com/%CHROMEDRIVER_VERSION%/chromedriver_win32.zip' -OutFile 'chromedriver.zip' } catch { echo 'Failed to download specific version, trying latest...'; Invoke-WebRequest -Uri 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE/chromedriver_win32.zip' -OutFile 'chromedriver.zip' }"
-                powershell -Command "Expand-Archive -Path 'chromedriver.zip' -DestinationPath '.' -Force"
-                
-                echo "Updating project file to use compatible ChromeDriver package..."
-                powershell -Command "$projectFile = 'SeleniumIDE\\SeleniumIde.csproj'; $content = Get-Content $projectFile; $newContent = $content -replace 'Version=\\\"127\\.0\\.6533\\.7200\\\"', 'Version=\\\"%CHROMEDRIVER_VERSION%.0\\\"'; Set-Content $projectFile $newContent"
-                
-                echo "ChromeDriver setup completed"
-                echo "Current directory contents:"
-                dir
-                echo "ChromeDriver version check:"
-                chromedriver.exe --version
-                '''
-            }
-        }
-        stage("Rebuild with updated ChromeDriver") {
-            steps {
-                bat '''
-                echo "Restoring packages with updated ChromeDriver version..."
-                dotnet restore
-                echo "Rebuilding project with new ChromeDriver package..."
-                dotnet build --no-restore
-                '''
-            }
-        }
         stage ("Run tests") {
             steps {
-                bat '''
-                echo "Adding ChromeDriver to PATH..."
-                set PATH=%CD%;%PATH%
-                echo "PATH updated: %PATH%"
-                echo "Testing ChromeDriver version:"
-                chromedriver.exe --version
-                echo "Checking which ChromeDriver is being used:"
-                where chromedriver
-                echo "Running tests with correct ChromeDriver..."
-                dotnet test --no-build --verbosity normal
-                '''
+                bat 'dotnet test --no-build --verbosity normal'
             }
         }
     }
