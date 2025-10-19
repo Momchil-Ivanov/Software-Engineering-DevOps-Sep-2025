@@ -1,12 +1,15 @@
+const { before, after } = require('mocha');
+
 let server;
 let isServerRunning = false;
 
-setup(function(done) {
+before(function(done) {
   // Only start server if it's not already running
   if (!isServerRunning) {
     let students = [
-      {"name" : "Steve", "email" : "steve@gmail.com"},
-      {"name" : "Tina", "email" : "tina@yahoo.com"}
+      {"name" : "Marry", "email" : "marry@gmail.com"},
+      {"name" : "Steve" , "email" : "steve@yahoo.com"},
+      {"name" : "Teddy" , "email" : "teddy@mail.ru"}
     ];
     const express = require('express');
     const app = express();
@@ -29,7 +32,7 @@ setup(function(done) {
   }
 });
 
-teardown(function(done) {
+after(function(done) {
   if (server && isServerRunning) {
     server.close(function() {
       console.log('Test server closed');

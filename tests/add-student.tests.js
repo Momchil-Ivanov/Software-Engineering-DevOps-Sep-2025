@@ -35,7 +35,7 @@ suite('Add Students page', function() {
     );
     let body = await res.text();
     let studentsReturned = body.includes(
-		"<ul><li>Steve (steve@gmail.com)</li><li>Tina (tina@yahoo.com)</li><li>Peter (peter@gmail.com)</li></ul>");
+		"<ul><li>Marry (marry@gmail.com)</li><li>Steve (steve@yahoo.com)</li><li>Teddy (teddy@mail.ru)</li><li>Peter (peter@gmail.com)</li></ul>");
     assert.ok(studentsReturned, "Add student failed");
   });
 
@@ -56,7 +56,7 @@ suite('Add Students page', function() {
 
     res = await fetch("http://localhost:8888/");
     body = await res.text();
-	assert.ok(body.includes("Registered students: <b>2</b>"), 
+	assert.ok(body.includes("Registered students: <b>4</b>"), 
 		"Add invalid student should not change the students count");
   });
 });

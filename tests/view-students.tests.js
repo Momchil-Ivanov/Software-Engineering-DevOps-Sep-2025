@@ -11,6 +11,6 @@ suite('View Students page', function() {
   test('Students list', async function() {
     let res = await fetch("http://localhost:8888/students");
     let body = await res.text();
-    assert.ok(body.includes("<ul><li>Steve (steve@gmail.com)</li><li>Tina (tina@yahoo.com)</li></ul>"));
+    assert.ok(body.includes("<ul><li>Marry (marry@gmail.com)</li><li>Steve (steve@yahoo.com)</li><li>Teddy (teddy@mail.ru)</li><li>Peter (peter@gmail.com)</li></ul>"));
   });
 });
