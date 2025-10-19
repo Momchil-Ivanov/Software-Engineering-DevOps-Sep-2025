@@ -1,6 +1,6 @@
 let server;
 
-setup(function() {
+setup(function(done) {
   let students = [
     {"name" : "Steve", "email" : "steve@gmail.com"},
     {"name" : "Tina", "email" : "tina@yahoo.com"}
@@ -14,9 +14,17 @@ setup(function() {
   const studentsController = 
     require("../controllers/students-controller");
   studentsController.setup(app, students);
-  server.listen(8888);
+  
+  server.listen(8888, function() {
+    console.log('Test server started on port 8888');
+    done(); // Call done() when server is ready
+  });
 });
 
-teardown(function() {
-  server.close();
+teardown(function(done) {
+  if (server) {
+    server.close(done); // Call done() when server is closed
+  } else {
+    done();
+  }
 });
