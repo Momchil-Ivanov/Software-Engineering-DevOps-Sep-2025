@@ -32,7 +32,7 @@ pipeline {
                 powershell -Command "Expand-Archive -Path 'chromedriver.zip' -DestinationPath '.' -Force"
                 
                 echo "Updating project file to use compatible ChromeDriver package..."
-                powershell -Command "$projectFile = 'SeleniumIDE\\SeleniumIde.csproj'; $content = Get-Content $projectFile; $newContent = $content -replace 'Version=\"127\.0\.6533\.7200\"', 'Version=\"%CHROMEDRIVER_VERSION%.0\"'; Set-Content $projectFile $newContent"
+                powershell -Command "$projectFile = 'SeleniumIDE\\SeleniumIde.csproj'; $content = Get-Content $projectFile; $newContent = $content -replace 'Version=\\\"127\\.0\\.6533\\.7200\\\"', 'Version=\\\"%CHROMEDRIVER_VERSION%.0\\\"'; Set-Content $projectFile $newContent"
                 
                 echo "ChromeDriver setup completed"
                 echo "Current directory contents:"
