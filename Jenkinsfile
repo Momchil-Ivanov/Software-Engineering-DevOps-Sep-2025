@@ -14,9 +14,13 @@ pipeline {
         stage("Setup ChromeDriver") {
             steps {
                 bat '''
-                echo "Installing ChromeDriver..."
-                choco install chromedriver -y
-                echo "ChromeDriver installation completed"
+                echo "Setting up ChromeDriver..."
+                powershell -Command "Invoke-WebRequest -Uri 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE' -OutFile 'chrome_version.txt'"
+                for /f %%i in (chrome_version.txt) do set CHROME_VERSION=%%i
+                echo Chrome version: %CHROME_VERSION%
+                powershell -Command "Invoke-WebRequest -Uri 'https://chromedriver.storage.googleapis.com/%CHROME_VERSION%/chromedriver_win32.zip' -OutFile 'chromedriver.zip'"
+                powershell -Command "Expand-Archive -Path 'chromedriver.zip' -DestinationPath '.' -Force"
+                echo "ChromeDriver setup completed"
                 '''
             }
         }
