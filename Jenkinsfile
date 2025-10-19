@@ -28,8 +28,11 @@ pipeline {
                 echo ChromeDriver version to download: %CHROMEDRIVER_VERSION%
                 
                 echo "Downloading ChromeDriver %CHROMEDRIVER_VERSION%..."
-                powershell -Command "Invoke-WebRequest -Uri 'https://chromedriver.storage.googleapis.com/%CHROMEDRIVER_VERSION%/chromedriver_win32.zip' -OutFile 'chromedriver.zip'"
+                powershell -Command "try { Invoke-WebRequest -Uri 'https://chromedriver.storage.googleapis.com/%CHROMEDRIVER_VERSION%/chromedriver_win32.zip' -OutFile 'chromedriver.zip' } catch { echo 'Failed to download specific version, trying latest...'; Invoke-WebRequest -Uri 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE/chromedriver_win32.zip' -OutFile 'chromedriver.zip' }"
                 powershell -Command "Expand-Archive -Path 'chromedriver.zip' -DestinationPath '.' -Force"
+                
+                echo "Removing old ChromeDriver from system PATH..."
+                where chromedriver
                 
                 echo "ChromeDriver setup completed"
                 echo "Current directory contents:"
@@ -47,6 +50,9 @@ pipeline {
                 echo "PATH updated: %PATH%"
                 echo "Testing ChromeDriver version:"
                 chromedriver.exe --version
+                echo "Checking which ChromeDriver is being used:"
+                where chromedriver
+                echo "Running tests with correct ChromeDriver..."
                 dotnet test --no-build --verbosity normal
                 '''
             }
