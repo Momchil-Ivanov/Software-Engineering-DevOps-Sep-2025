@@ -31,14 +31,24 @@ pipeline {
                 powershell -Command "try { Invoke-WebRequest -Uri 'https://chromedriver.storage.googleapis.com/%CHROMEDRIVER_VERSION%/chromedriver_win32.zip' -OutFile 'chromedriver.zip' } catch { echo 'Failed to download specific version, trying latest...'; Invoke-WebRequest -Uri 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE/chromedriver_win32.zip' -OutFile 'chromedriver.zip' }"
                 powershell -Command "Expand-Archive -Path 'chromedriver.zip' -DestinationPath '.' -Force"
                 
-                echo "Removing old ChromeDriver from system PATH..."
-                where chromedriver
+                echo "Updating project file to use compatible ChromeDriver package..."
+                powershell -Command "$projectFile = 'SeleniumIDE\\SeleniumIde.csproj'; $content = Get-Content $projectFile; $newContent = $content -replace 'Version=\"127\.0\.6533\.7200\"', 'Version=\"%CHROMEDRIVER_VERSION%.0\"'; Set-Content $projectFile $newContent"
                 
                 echo "ChromeDriver setup completed"
                 echo "Current directory contents:"
                 dir
                 echo "ChromeDriver version check:"
                 chromedriver.exe --version
+                '''
+            }
+        }
+        stage("Rebuild with updated ChromeDriver") {
+            steps {
+                bat '''
+                echo "Restoring packages with updated ChromeDriver version..."
+                dotnet restore
+                echo "Rebuilding project with new ChromeDriver package..."
+                dotnet build --no-restore
                 '''
             }
         }
