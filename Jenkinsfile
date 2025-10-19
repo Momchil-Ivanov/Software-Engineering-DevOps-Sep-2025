@@ -1,6 +1,13 @@
 pipeline {
     agent any
     stages {
+        stage("Verify .NET Installation"){
+            steps{
+                bat 'dotnet --version'
+                bat 'dotnet --list-runtimes'
+                bat 'dotnet --list-sdks'
+            }
+        }
         stage("Restore project dependencies"){
             steps{
                 bat 'dotnet restore'
