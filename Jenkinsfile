@@ -4,27 +4,27 @@ pipeline {
     stages {
         stage("Restore dependencies") {
             steps {
-                bat 'dotnet restore SeleniumWebDriver'
+                bat 'dotnet restore SeleniumBasicExercise.sln'
             }
         }
         stage("Build") {
             steps {
-                bat 'dotnet build SeleniumWebDriver --no-restore'
+                bat 'dotnet build SeleniumBasicExercise.sln --no-restore'
             }
         }
         stage("Run Project1 Tests") {
             steps {
-                bat 'dotnet test SeleniumWebDriver/TestProject1 --no-build --verbosity normal'
+                bat 'dotnet test TestProject1 --no-build --verbosity normal'
             }
         }
         stage("Run Project2 Tests") {
             steps {
-                bat 'dotnet test SeleniumWebDriver/TestProject2 --no-build --verbosity normal'
+                bat 'dotnet test TestProject2 --no-build --verbosity normal'
             }
         }
         stage("Run Project3 Tests") {
             steps {
-                bat 'dotnet test SeleniumWebDriver/TestProject3 --no-build --verbosity normal'
+                bat 'dotnet test TestProject3 --no-build --verbosity normal'
             }
         }
     }
